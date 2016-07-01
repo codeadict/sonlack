@@ -1,0 +1,11 @@
+aiohttp==0.21.6
+pep8==1.7.0
+pytest==2.9.1
+requests==2.10.0
+slackbot==0.4.1
+slacker==0.9.18
+snowballstemmer==1.2.1
+soco==0.11.1
+spotipy==2.3.8
+websocket-client==0.37.0
+lxml==3.6.0
