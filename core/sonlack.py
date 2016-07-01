@@ -1,3 +1,5 @@
+import json
+
 import re
 import random
 
@@ -7,6 +9,7 @@ from soco import SoCo
 from slackbot.bot import listen_to, respond_to
 from slacker import Slacker
 import slackbot_settings as conf
+from core.utils import get_track_image
 
 SLACK_MSG_DEFAULT_KWARGS = {
     'as_user': False,
@@ -42,7 +45,7 @@ def help(message):
             '  -  `@' + conf.NAME + ' vol <VOLUME>` -- Sets volume to the specified level.',
         )))
     except Exception as e:
-        print(message, e)
+        print((message, e))
 
 
 @listen_to('^search (.*)', re.IGNORECASE)
@@ -52,7 +55,7 @@ def search(message, song_name):
     Search for a song.
     """
     try:
-        print('Got command search {}'.format(song_name))
+        print(('Got command search {}'.format(song_name)))
         if not song_name:
             message.reply(
                 'Please provide a song name')
@@ -68,11 +71,15 @@ def search(message, song_name):
         else:
             message.reply(':face_with_head_bandage: Can\'t find any song with this name.')
     except Exception as e:
-        print(message, e)
+        print((message, e))
 
 
 @listen_to(':thumbsdown:', re.IGNORECASE)
 @respond_to(':thumbsdown:', re.IGNORECASE)
+@listen_to('meh!', re.IGNORECASE)
+@respond_to('meh!', re.IGNORECASE)
+@listen_to('I dont like it', re.IGNORECASE)
+@respond_to('I dont like it', re.IGNORECASE)
 def skip(message):
     """
     Skips current song.
@@ -90,25 +97,29 @@ def skip(message):
     try:
         print('Got command skip.')
         message.reply(random.choice(responses))
+        message.reply(speaker.next())
     except Exception as e:
-        print(message, e)
+        print((message, e))
 
 
+@listen_to('^vol$', re.IGNORECASE)
 @listen_to('^vol ([0-9]+)$', re.IGNORECASE)
-@respond_to('^vol ([0-9]+)$', re.IGNORECASE)
-def volume(message, value):
+@respond_to('^vol$', re.IGNORECASE)
+@respond_to('^vol ([0-9]+)', re.IGNORECASE)
+def volume(message, value=None):
     """
     Shows current volume
     """
     print('Got command Volume.')
     try:
-        if value and int(value):
+        if value:
             message.reply('Setting volume to {}'.format(value))
             speaker.volume = value
         else:
-            message.reply(speaker.volume)
+            print('Print the volume')
+            message.reply('Current volume is: *{}*'.format(speaker.volume))
     except Exception as e:
-        print(message, e)
+        print((message, e))
 
 
 @listen_to('next', re.IGNORECASE)
@@ -119,9 +130,9 @@ def next(message):
     """
     try:
         print('Got command Next.')
-        message.reply(speaker.next())
+        message.reply(next(speaker))
     except Exception as e:
-        print(message, e)
+        print((message, e))
 
 
 @listen_to('prev', re.IGNORECASE)
@@ -134,4 +145,45 @@ def previous(message):
         print('Got command Previous.')
         message.reply(speaker.previous())
     except Exception as e:
-        print(message, e)
+        print((message, e))
+
+
+@listen_to('^playing$', re.IGNORECASE)
+@respond_to('^playing$', re.IGNORECASE)
+def playing(message):
+    """
+    Play previous song.
+    """
+    #try:
+    print('Got command Playing.')
+    song = speaker.get_current_track_info()
+    #image_url = get_track_image(song.get('artist'), song.get('album'))
+    #print(image_url)
+    attachments = [
+        {
+            "color": "#D30782",
+            "pretext": ":musical_note: :musical_note: Now playing:",
+            "author_name": song.get('artist'),
+            #"thumb_url": image_url,
+            "title": song.get('title'),
+            "fields": [
+                {
+                    "title": "Album",
+                    "value": song.get('album'),
+                    "short": False
+                },
+                {
+                    "title": "Duration",
+                    "value": song.get('duration'),
+                    "short": False
+                }
+            ]
+        }
+    ]
+    message.send_webapi('', json.dumps(attachments))
+
+@listen_to('^play$', re.IGNORECASE)
+@respond_to('^play$', re.IGNORECASE)
+def play():
+    print('Got command Play.')
+    speaker.play()
