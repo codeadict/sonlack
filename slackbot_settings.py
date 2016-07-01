@@ -9,9 +9,9 @@ PLUGINS = [
     'core.sonlack',
 ]
 
-API_TOKEN = getenv('SLACK_API_TOKEN', 'xoxb-56032071207-5rHWEWhcuNmQgXppEVouML5l')
+API_TOKEN = getenv('SLACK_API_TOKEN', None)
 
-SPEAKER_IP = getenv('SPEAKER_IP', '10.10.0.62')
+SPEAKER_IP = getenv('SPEAKER_IP', None)
 
-ROVI_API_KEY = '39gxk7ny8as24ycfhv8hwdfu'
-ROVI_SHARED_SECRET = '4uNJF6bezA'
+ROVI_API_KEY = getenv('ROVI_API_KEY', None)
+ROVI_SHARED_SECRET = getenv('ROVI_SHARED_SECRET', None)
