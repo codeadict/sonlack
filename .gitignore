@@ -91,3 +91,6 @@ ENV/
 # Pycharm stuff
 .idea
 .idea/vcs.xml
+
+# Environment Variables
+environment.sh
