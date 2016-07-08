@@ -86,10 +86,10 @@ def skip(message):
     """
     responses = [
         'There is two kinds of music, the good, and the bad. I play the good kind.',
-        'If I find myself just not feeling like playing songs anymore, I think I\'ll drop it.',
+        'If I find myself not wanting to play songs anymore, I think I\'ll drop it.',
         'Well! Think that\'s an awful song. Playing next.',
-        'We should removing that shit.',
-        'LOL! What a bad taste.',
+        'We should remove that shit.',
+        'LOL! What bad taste.',
         'I should in fairness add that peoples taste in music is reputedly deplorable.',
         'Bad taste is simply saying the truth before it should be said.',
         'I like all music. The only music I don\'t like is bad music.'
